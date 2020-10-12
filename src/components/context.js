@@ -1,5 +1,6 @@
 // importting react
 import React from 'react';
+import axios from 'axios';
 // creating context
 export const Context = React.createContext();
 // setup a reducer function
@@ -25,15 +26,16 @@ const reducer = (state, action) => {
 export class Provider extends React.Component {
   // give it an state object
   state = {
-    contacts: [
-      { id: 1, name: 'John Doe', email: 'jDoe@example.com', phone: '122-34344-2' },
-      { id: 2, name: 'John Doe', email: 'jDoe@example.com', phone: '122-34344-2' },
-      { id: 3, name: 'John Doe', email: 'jDoe@example.com', phone: '122-34344-2' },
-      { id: 4, name: 'John Doe', email: 'jDoe@example.com', phone: '122-34344-2' },
-    ],
+    contacts: [],
     // make a dispatch function which tacke's an action as an argument
     dispatch: (action) => this.setState((state) => reducer(state, action)),
   };
+  // making an http GET request
+  componentDidMount() {
+    axios
+      .get('https://jsonplaceholder.typicode.com/users')
+      .then((res) => this.setState({ contacts: res.data }));
+  }
   // rendering the Provider from the context to the main App component
   render() {
     return <Context.Provider value={this.state}>{this.props.children}</Context.Provider>;
