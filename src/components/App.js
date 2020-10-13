@@ -8,6 +8,7 @@ import Header from './layout/Header';
 import Contacts from './contacts/Contacts';
 import About from './pages/About';
 import AddContact from './contacts/AddContact';
+import EditContact from './contacts/EditContact';
 import ErrorPage from './pages/ErrorPage';
 
 class App extends Component {
@@ -22,6 +23,7 @@ class App extends Component {
                 <Route exact path="/" component={Contacts}></Route>
                 <Route exact path="/about" component={About}></Route>
                 <Route exact path="/add-contact" component={AddContact}></Route>
+                <Route exact path="/edit-contact/:id" component={EditContact}></Route>
                 <Route component={ErrorPage}></Route>
               </Switch>
             </div>

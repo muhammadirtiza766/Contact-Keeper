@@ -1,14 +1,18 @@
 import React, { Component } from 'react';
+import { Link } from 'react-router-dom';
 import { Consumer } from '../context';
 import axios from 'axios';
 
 class Contact extends Component {
   state = { showInfo: false };
 
-  onDeleteClick = (id, dispatch) => {
-    axios
-      .delete(`http://jsonplaceholder.typicode.com/users/${id}`)
-      .then((res) => dispatch({ type: 'DELETE_CONTACT', payload: id }));
+  onDeleteClick = async (id, dispatch) => {
+    try {
+      await axios.delete(`http://jsonplaceholder.typicode.com/users/${id}`);
+      dispatch({ type: 'DELETE_CONTACT', payload: id });
+    } catch (e) {
+      dispatch({ type: 'DELETE_CONTACT', payload: id });
+    }
   };
 
   showClick = () => {
@@ -41,6 +45,12 @@ class Contact extends Component {
                   style={{ color: 'red', cursor: 'pointer', float: 'right' }}
                   onClick={this.onDeleteClick.bind(this, contact.id, dispatch)}
                 ></i>
+                <Link to={`edit-contact/${contact.id}`}>
+                  <i
+                    className="fa fa-pencil"
+                    style={{ float: 'right', color: '#333', marginRight: '20px' }}
+                  ></i>
+                </Link>
               </h4>
               <br />
               {this.state.showInfo ? (

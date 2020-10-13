@@ -10,7 +10,13 @@ class AddContact extends Component {
     phone: '',
     errors: {},
   };
+  async componentDidMount() {
+    const { id } = this.props.match.params;
+    const res = await axios.get(`https://jsonplaceholder.typicode.com/users/${id}`);
+    const contact = res.data;
 
+    this.setState({ name: contact.name, email: contact.email, phone: contact.phone });
+  }
   onSubmit = async (dispatch, e) => {
     e.preventDefault();
     const { name, email, phone } = this.state;
@@ -26,12 +32,16 @@ class AddContact extends Component {
       this.setState({ errors: { phone: 'Phone is Required' } });
       return;
     }
-    const newContact = { name, email, phone };
-    const res = await axios.post(
-      `https://jsonplaceholder.typicode.com/users/`,
-      newContact
+
+    const { id } = this.props.match.params;
+
+    const updatedContact = { name, email, phone };
+
+    const res = await axios.put(
+      `https://jsonplaceholder.typicode.com/users/${id}`,
+      updatedContact
     );
-    dispatch({ type: 'ADD_CONTACT', payload: res.data });
+    dispatch({ type: 'UPDATE_CONTACT', payload: res.data });
     // clearing fileds
     this.setState({ name: '', email: '', phone: '', error: {} });
 
@@ -49,7 +59,7 @@ class AddContact extends Component {
           const { dispatch } = value;
           return (
             <div className="card mb-3">
-              <div className="card-header">Add Contact</div>
+              <div className="card-header">Edit Contact</div>
               <div className="card-body">
                 <form onSubmit={this.onSubmit.bind(this, dispatch)}>
                   <TextInputGroup
@@ -78,7 +88,7 @@ class AddContact extends Component {
                   />
                   <input
                     type="submit"
-                    value="Add Contact"
+                    value="Update Contact"
                     className="btn btn-primary btn-block"
                   />
                 </form>
